@@ -78,6 +78,7 @@ function openDetails(car) {
   <p>Color: ${car.colorName}</p>
   <p><b>Country:</b> ${car.country}</p>
   <p><b>Description:</b> ${car.description}</p>
+  
   `;
 
   modal.classList.add("active");
@@ -121,8 +122,10 @@ elBtn.addEventListener("click", () => {
   document.body.classList.toggle("dark");
   if (document.body.classList.contains("dark")) {
     localStorage.setItem("key", "dark");
+    chanel.postMessage("dark");
   } else {
     localStorage.setItem("key", "light");
+    chanel.postMessage("light");
   }
 });
 window.addEventListener("load", () => {
@@ -131,4 +134,72 @@ window.addEventListener("load", () => {
     document.body.classList.add("dark");
   }
 });
+chanel.addEventListener("message", (evt) => {
+  if (evt.data === "dark") {
+    document.body.classList.add("dark");
+  } else {
+    document.body.classList.remove("dark");
+  }
+});
 // qoshish
+addBtn.addEventListener("click", () => {
+  const modalBody = document.getElementById("modalBody");
+
+  modalBody.innerHTML = `
+    <h2>Add New Car</h2>
+    <input id="carName" placeholder="Name" />
+    <input id="carTrim" placeholder="Brand" />
+    <input id="carGeneration" placeholder="Generation" />
+    <input id="carYear" placeholder="Year" type="number"/>
+    <input id="carCategory" placeholder="Category" />
+    <input id="carDoorCount" placeholder="Doors" type="number"/>
+    <input id="carSeatCount" placeholder="Seats" type="number"/>
+    <input id="carMaxSpeed" placeholder="Max Speed" type="number"/>
+    <input id="carHorsepower" placeholder="Horsepower" type="number"/>
+    <input id="carFuelType" placeholder="Fuel Type"/>
+    <input id="carFuelCity" placeholder="Fuel City"/>
+    <input id="carFuelHighway" placeholder="Fuel Highway"/>
+    <input id="carFuelCombined" placeholder="Fuel Combined"/>
+    <input id="carColorName" placeholder="Color"/>
+    <input id="carCountry" placeholder="Country"/>
+    <textarea id="carDescription" placeholder="Description"></textarea>
+    <button id="saveCarBtn">Save Car</button>
+
+  `;
+  modal.classList.add("active");
+  if (document.body.classList.contains("dark")) {
+    modalBody.classList.add("dark");
+  } else {
+    modalBody.classList.remove("dark");
+  }
+
+  document.getElementById("saveCarBtn").onclick = () => {
+    const newCar = {
+      id: Date.now(),
+      name: document.getElementById("carName").value,
+      trim: document.getElementById("carTrim").value,
+      generation: document.getElementById("carGeneration").value,
+      year: document.getElementById("carYear").value,
+      category: document.getElementById("carCategory").value,
+      doorCount: document.getElementById("carDoorCount").value,
+      seatCount: document.getElementById("carSeatCount").value,
+      maxSpeed: document.getElementById("carMaxSpeed").value,
+      acceleration: document.getElementById("carAcceleration").value,
+      engine: document.getElementById("carEngine").value,
+      horsepower: document.getElementById("carHorsepower").value,
+      fuelType: document.getElementById("carFuelType").value,
+      fuelConsumption: {
+        city: document.getElementById("carFuelCity").value,
+        highway: document.getElementById("carFuelHighway").value,
+        combined: document.getElementById("carFuelCombined").value,
+      },
+      colorName: document.getElementById("carColorName").value,
+      country: document.getElementById("carCountry").value,
+      description: document.getElementById("carDescription").value,
+    };
+
+    cars.push(newCar);
+    showCardsAll();
+    modal.classList.remove("active");
+  };
+});
